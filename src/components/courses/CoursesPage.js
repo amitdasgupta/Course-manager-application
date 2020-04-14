@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import * as courseActions from "../../redux/actions/courseActions";
 import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
-
+import CourseList from "./CourseList";
 class CoursesPage extends React.Component {
   // constructor(props) {
   //   super(props);
@@ -41,9 +41,7 @@ class CoursesPage extends React.Component {
         {/* <h3>Add Course</h3>
         <input type="text" onChange={handleChange} value={title} />
         <input type="submit" value="Submit" /> */}
-        {this.props.courses.map((course) => {
-          return <div key={course.title}>{course.title}</div>;
-        })}
+        <CourseList courses={this.props.courses} />
         {/* </form> */}
       </>
     );
