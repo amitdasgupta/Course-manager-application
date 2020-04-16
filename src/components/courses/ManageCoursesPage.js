@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { loadCourses, saveCourse } from "../../redux/actions/courseActions";
@@ -9,14 +8,16 @@ import { newCourse } from "../../../tools/mockData";
 
 function ManageCoursePage({
   courses,
-  loadCourses,
   authors,
   loadAuthors,
+  loadCourses,
   saveCourse,
+  history,
   ...props
 }) {
   const [course, setCourse] = useState({ ...props.course });
   const [errors, setErrors] = useState({});
+
   useEffect(() => {
     if (courses.length === 0) {
       loadCourses().catch((error) => {
@@ -31,7 +32,7 @@ function ManageCoursePage({
         alert("Loading authors failed" + error);
       });
     }
-  }, []);
+  }, [props.course]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -43,7 +44,10 @@ function ManageCoursePage({
 
   function handleSave(event) {
     event.preventDefault();
-    saveCourse(course);
+    saveCourse(course).then(() => {
+      history.push("/courses");
+      // window.location.reload();
+    });
   }
 
   return (
@@ -58,21 +62,31 @@ function ManageCoursePage({
 }
 
 ManageCoursePage.propTypes = {
+  course: PropTypes.object.isRequired,
+  authors: PropTypes.array.isRequired,
+  courses: PropTypes.array.isRequired,
   loadCourses: PropTypes.func.isRequired,
   loadAuthors: PropTypes.func.isRequired,
-  courses: PropTypes.array.isRequired,
-  authors: PropTypes.array.isRequired,
-  course: PropTypes.object.isRequired,
   saveCourse: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => {
+export function getCourseBySlug(courses, slug) {
+  return courses.find((course) => course.slug === slug) || null;
+}
+
+function mapStateToProps(state, ownProps) {
+  const slug = ownProps.match.params.slug;
+  const course =
+    slug && state.courses.length > 0
+      ? getCourseBySlug(state.courses, slug)
+      : newCourse;
   return {
-    course: newCourse,
+    course,
     courses: state.courses,
     authors: state.authors,
   };
-};
+}
 
 const mapDispatchToProps = {
   loadCourses,
