@@ -6,29 +6,8 @@ import * as authorActions from "../../redux/actions/authorActions";
 import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
 import CourseList from "./CourseList";
+import { Redirect } from "react-router-dom";
 class CoursesPage extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     courses: {
-  //       title: "",
-  //     },
-  //   };
-  // }
-  // handleChange = (event) => {
-  //   const courses = { ...this.state.courses, title: event.target.value };
-  //   this.setState({ courses });
-  // };
-  // handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   // eslint-disable-next-line react/prop-types
-  //   this.props.actions.createCourse(this.state.courses);
-  //   this.setState({
-  //     courses: {
-  //       title: "",
-  //     },
-  //   });
-  // };
   componentDidMount() {
     const { courses, actions, authors } = this.props;
     if (courses.length == 0)
@@ -44,13 +23,8 @@ class CoursesPage extends React.Component {
   render() {
     return (
       <>
-        {/* // <form onSubmit={handleSubmit}> */}
         <h2>Courses</h2>
-        {/* <h3>Add Course</h3>
-        <input type="text" onChange={handleChange} value={title} />
-        <input type="submit" value="Submit" /> */}
         <CourseList courses={this.props.courses} />
-        {/* </form> */}
       </>
     );
   }
