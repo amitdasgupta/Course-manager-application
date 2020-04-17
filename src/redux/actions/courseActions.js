@@ -54,3 +54,17 @@ export function saveCourse(course) {
       });
   };
 }
+
+export function deleteCourseOptimitic(course) {
+  return {
+    type: types.DELETE_COURSE_OPTIMISTIC,
+    course,
+  };
+}
+
+export function deleteCourse(course) {
+  return (dispatch) => {
+    dispatch(deleteCourseOptimitic(course));
+    return courseApi.deleteCourse(course.id);
+  };
+}

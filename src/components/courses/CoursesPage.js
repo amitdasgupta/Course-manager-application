@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import CourseList from "./CourseList";
 import { Redirect } from "react-router-dom";
 import Spinner from "../common/Spinner";
+import { toast } from "react-toastify";
 class CoursesPage extends React.Component {
   state = {
     redirectToAddCoursePage: false,
@@ -23,6 +24,16 @@ class CoursesPage extends React.Component {
         alert("Loading authors failed" + error);
       });
   }
+
+  handleDeleteCourse = async (course) => {
+    toast.success("Course deleted");
+    try {
+      await this.props.actions.deleteCourse(course);
+    } catch (error) {
+      toast.error("Delete falied. " + error.message, { autoClose: false });
+    }
+  };
+
   render() {
     const { redirectToAddCoursePage } = this.state;
     return (
@@ -44,7 +55,10 @@ class CoursesPage extends React.Component {
             >
               Add Course
             </button>
-            <CourseList courses={this.props.courses} />
+            <CourseList
+              courses={this.props.courses}
+              onDeleteClick={this.handleDeleteCourse}
+            />
           </>
         )}
       </>
@@ -81,6 +95,7 @@ const mapDispatchToProps = (dispatch) => {
     actions: {
       loadCourses: bindActionCreators(courseActions.loadCourses, dispatch),
       loadAuthors: bindActionCreators(authorActions.loadAuthors, dispatch),
+      deleteCourse: bindActionCreators(courseActions.deleteCourse, dispatch),
     },
   };
 };
